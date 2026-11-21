@@ -1,26 +1,21 @@
-export interface Property {
+
+export interface Product {
   id: string;
-  title: string;
+  name: string;
   description: string;
   price: number;
-  location: string;
-  bedrooms: number;
-  bathrooms: number;
-  sqft: number;
-  images: string[];
-  amenities: string[];
-  type: 'house' | 'apartment' | 'condo' | 'villa';
-  rating: number;
-  reviews: number;
-  available: boolean;
+  image: string;
+  category: string;
+  stock: number;
+  commission: number;
+  affiliateLink?: string;
   featured: boolean;
+  available: boolean;
 }
 
 export interface SearchFilters {
-  location: string;
+  search: string;
+  category: string;
   priceMin: number;
   priceMax: number;
-  bedrooms: number;
-  bathrooms: number;
-  propertyType: string;
 }
