@@ -1,146 +1,88 @@
-import React, { useState } from 'react';
-import { Search, MapPin, Calendar, Users } from 'lucide-react';
+
+import React from 'react';
+import { ShoppingBag, ArrowRight, Truck, ShieldCheck, Wallet } from 'lucide-react';
 
 const Hero: React.FC = () => {
-  const [searchData, setSearchData] = useState({
-    location: '',
-    checkIn: '',
-    checkOut: '',
-    guests: 1
-  });
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Search data:', searchData);
-  };
-
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image with Overlay */}
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+      {/* Background */}
       <div className="absolute inset-0">
         <img
-          src="https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=1920"
-          alt="Beautiful modern home"
+          src="https://images.pexels.com/photos/5632402/pexels-photo-5632402.jpeg?auto=compress&cs=tinysrgb&w=1920"
+          alt="Online shopping products"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/70 via-blue-800/60 to-emerald-800/70"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-950/90 via-blue-950/80 to-emerald-900/80"></div>
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
-          Find Your Perfect
-          <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-blue-400">
-            Rental Home
+      {/* Main Content */}
+      <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto py-16">
+
+        <span className="inline-block bg-emerald-500/20 border border-emerald-300/40 text-emerald-200 px-5 py-2 rounded-full text-sm font-semibold mb-6">
+          Murakaza neza kuri RUBAVU ONLINE MARKET
+        </span>
+
+        <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+          Gura Ibicuruzwa
+          <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-blue-300">
+            Ubyifuza Byose!
           </span>
         </h1>
-        
-        <p className="text-xl sm:text-2xl text-blue-100 mb-12 max-w-2xl mx-auto leading-relaxed">
-          Discover amazing properties with world-class amenities and breathtaking views
+
+        <p className="text-lg sm:text-xl md:text-2xl text-gray-200 mb-10 max-w-3xl mx-auto leading-relaxed">
+          Shaka ibicuruzwa byiza ku giciro cyiza. Gura, Sangiza abandi,
+          kandi winjize amafaranga binyuze muri affiliate marketing.
         </p>
 
-        {/* Search Form */}
-        <form onSubmit={handleSearch} className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-2xl max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6">
-            {/* Location */}
-            <div className="relative">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Location
-              </label>
-              <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Where are you going?"
-                  value={searchData.location}
-                  onChange={(e) => setSearchData({...searchData, location: e.target.value})}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                />
-              </div>
-            </div>
-
-            {/* Check In */}
-            <div className="relative">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Check In
-              </label>
-              <div className="relative">
-                <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                <input
-                  type="date"
-                  value={searchData.checkIn}
-                  onChange={(e) => setSearchData({...searchData, checkIn: e.target.value})}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                />
-              </div>
-            </div>
-
-            {/* Check Out */}
-            <div className="relative">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Check Out
-              </label>
-              <div className="relative">
-                <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                <input
-                  type="date"
-                  value={searchData.checkOut}
-                  onChange={(e) => setSearchData({...searchData, checkOut: e.target.value})}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                />
-              </div>
-            </div>
-
-            {/* Guests */}
-            <div className="relative">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Guests
-              </label>
-              <div className="relative">
-                <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                <select
-                  value={searchData.guests}
-                  onChange={(e) => setSearchData({...searchData, guests: parseInt(e.target.value)})}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all appearance-none bg-white"
-                >
-                  <option value={1}>1 Guest</option>
-                  <option value={2}>2 Guests</option>
-                  <option value={3}>3 Guests</option>
-                  <option value={4}>4 Guests</option>
-                  <option value={5}>5+ Guests</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          {/* Search Button */}
-          <button
-            type="submit"
-            className="w-full md:w-auto bg-gradient-to-r from-blue-600 to-emerald-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200 mt-6 flex items-center justify-center space-x-2"
+        {/* Buttons */}
+        <div className="flex flex-col sm:flex-row justify-center gap-4 mb-14">
+          <a
+            href="#products"
+            className="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-3 transition-all shadow-xl"
           >
-            <Search className="h-5 w-5" />
-            <span>Search Properties</span>
-          </button>
-        </form>
+            <ShoppingBag size={22} />
+            Reba Ibicuruzwa
+            <ArrowRight size={20} />
+          </a>
 
-        {/* Stats */}
-        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 text-white">
-          <div>
-            <div className="text-3xl md:text-4xl font-bold text-emerald-400 mb-2">500+</div>
-            <div className="text-blue-100">Properties</div>
+          <a
+            href="#products"
+            className="border-2 border-white text-white hover:bg-white hover:text-emerald-900 px-8 py-4 rounded-xl font-bold text-lg transition-all"
+          >
+            Tangira Gucuruza
+          </a>
+        </div>
+
+        {/* Benefits */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 text-white max-w-4xl mx-auto">
+          <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6">
+            <ShoppingBag className="mx-auto mb-3 text-emerald-300" size={34} />
+            <h3 className="font-bold text-lg mb-2">Ibicuruzwa Byiza</h3>
+            <p className="text-gray-200 text-sm">
+              Hitamo ibicuruzwa bitandukanye.
+            </p>
           </div>
-          <div>
-            <div className="text-3xl md:text-4xl font-bold text-emerald-400 mb-2">98%</div>
-            <div className="text-blue-100">Satisfaction</div>
+
+          <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6">
+            <Wallet className="mx-auto mb-3 text-emerald-300" size={34} />
+            <h3 className="font-bold text-lg mb-2">Injiza Amafaranga</h3>
+            <p className="text-gray-200 text-sm">
+              Shaka commission igihe ibicuruzwa biguzwe binyuze kuri link yawe.
+            </p>
           </div>
-          <div>
-            <div className="text-3xl md:text-4xl font-bold text-emerald-400 mb-2">50+</div>
-            <div className="text-blue-100">Cities</div>
+
+          <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6">
+            <ShieldCheck className="mx-auto mb-3 text-emerald-300" size={34} />
+            <h3 className="font-bold text-lg mb-2">Umutekano</h3>
+            <p className="text-gray-200 text-sm">
+              Gura no kugurisha mu buryo bworoshye.
+            </p>
           </div>
-          <div>
-            <div className="text-3xl md:text-4xl font-bold text-emerald-400 mb-2">24/7</div>
-            <div className="text-blue-100">Support</div>
-          </div>
+        </div>
+
+        <div className="mt-10 flex items-center justify-center gap-2 text-emerald-200 text-sm">
+          <Truck size={20} />
+          <span>RUBAVU ONLINE MARKET — Isoko ryawe kuri internet</span>
         </div>
       </div>
     </section>
