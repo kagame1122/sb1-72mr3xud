@@ -1,130 +1,77 @@
-import { Property } from '../types';
 
-export const properties: Property[] = [
+import { Product } from '../types';
+
+export const products: Product[] = [
   {
     id: '1',
-    title: 'Modern Downtown Loft',
-    description: 'Stunning modern loft in the heart of downtown with floor-to-ceiling windows, exposed brick walls, and premium finishes throughout.',
-    price: 2800,
-    location: 'Downtown, Seattle',
-    bedrooms: 2,
-    bathrooms: 2,
-    sqft: 1200,
-    images: [
-      'https://images.pexels.com/photos/1643383/pexels-photo-1643383.jpeg?auto=compress&cs=tinysrgb&w=800',
-      'https://images.pexels.com/photos/2724748/pexels-photo-2724748.jpeg?auto=compress&cs=tinysrgb&w=800',
-      'https://images.pexels.com/photos/2062426/pexels-photo-2062426.jpeg?auto=compress&cs=tinysrgb&w=800'
-    ],
-    amenities: ['Gym', 'Rooftop Terrace', 'Concierge', 'Pet Friendly', 'Parking'],
-    type: 'apartment',
-    rating: 4.8,
-    reviews: 32,
-    available: true,
-    featured: true
+    name: 'Smartphone Android',
+    description: 'Telefone igezweho ifite camera nziza na battery imara igihe.',
+    price: 85000,
+    image: 'https://images.pexels.com/photos/699122/pexels-photo-699122.jpeg',
+    category: 'Electronics',
+    stock: 20,
+    commission: 10,
+    featured: true,
+    available: true
   },
   {
     id: '2',
-    title: 'Luxury Waterfront Villa',
-    description: 'Breathtaking waterfront villa with private beach access, infinity pool, and panoramic ocean views. Perfect for luxury living.',
-    price: 5200,
-    location: 'Malibu, CA',
-    bedrooms: 4,
-    bathrooms: 3,
-    sqft: 2800,
-    images: [
-      'https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=800',
-      'https://images.pexels.com/photos/2635038/pexels-photo-2635038.jpeg?auto=compress&cs=tinysrgb&w=800',
-      'https://images.pexels.com/photos/1457842/pexels-photo-1457842.jpeg?auto=compress&cs=tinysrgb&w=800'
-    ],
-    amenities: ['Private Beach', 'Pool', 'Spa', 'Wine Cellar', 'Garden'],
-    type: 'villa',
-    rating: 4.9,
-    reviews: 18,
-    available: true,
-    featured: true
+    name: 'Laptop Computer',
+    description: 'Laptop nziza yo kwigiraho no gukoreraho.',
+    price: 350000,
+    image: 'https://images.pexels.com/photos/18105/pexels-photo.jpg',
+    category: 'Electronics',
+    stock: 10,
+    commission: 10,
+    featured: true,
+    available: true
   },
   {
     id: '3',
-    title: 'Cozy Mountain Cabin',
-    description: 'Charming rustic cabin nestled in the mountains with fireplace, hiking trails nearby, and stunning mountain views.',
-    price: 1800,
-    location: 'Aspen, CO',
-    bedrooms: 3,
-    bathrooms: 2,
-    sqft: 1600,
-    images: [
-      'https://images.pexels.com/photos/338504/pexels-photo-338504.jpeg?auto=compress&cs=tinysrgb&w=800',
-      'https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=800',
-      'https://images.pexels.com/photos/1029599/pexels-photo-1029599.jpeg?auto=compress&cs=tinysrgb&w=800'
-    ],
-    amenities: ['Fireplace', 'Mountain Views', 'Hiking', 'WiFi', 'Parking'],
-    type: 'house',
-    rating: 4.7,
-    reviews: 24,
-    available: true,
-    featured: false
+    name: 'Inkweto z’abagabo',
+    description: 'Inkweto nziza kandi zikomeye zo kwambara buri munsi.',
+    price: 25000,
+    image: 'https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg',
+    category: 'Fashion',
+    stock: 30,
+    commission: 10,
+    featured: false,
+    available: true
   },
   {
     id: '4',
-    title: 'Contemporary City Penthouse',
-    description: 'Sophisticated penthouse with 360-degree city views, private elevator, and world-class amenities.',
-    price: 4500,
-    location: 'Manhattan, NY',
-    bedrooms: 3,
-    bathrooms: 3,
-    sqft: 2200,
-    images: [
-      'https://images.pexels.com/photos/2089698/pexels-photo-2089698.jpeg?auto=compress&cs=tinysrgb&w=800',
-      'https://images.pexels.com/photos/1571463/pexels-photo-1571463.jpeg?auto=compress&cs=tinysrgb&w=800',
-      'https://images.pexels.com/photos/2724749/pexels-photo-2724749.jpeg?auto=compress&cs=tinysrgb&w=800'
-    ],
-    amenities: ['City Views', 'Gym', 'Concierge', 'Terrace', 'Storage'],
-    type: 'condo',
-    rating: 4.6,
-    reviews: 41,
-    available: true,
-    featured: true
+    name: 'Isakoshi y’abagore',
+    description: 'Isakoshi nziza kandi igezweho.',
+    price: 18000,
+    image: 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg',
+    category: 'Fashion',
+    stock: 15,
+    commission: 10,
+    featured: false,
+    available: true
   },
   {
     id: '5',
-    title: 'Suburban Family Home',
-    description: 'Spacious family home in quiet neighborhood with large backyard, modern kitchen, and excellent schools nearby.',
-    price: 2200,
-    location: 'Austin, TX',
-    bedrooms: 4,
-    bathrooms: 3,
-    sqft: 2400,
-    images: [
-      'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=800',
-      'https://images.pexels.com/photos/1643384/pexels-photo-1643384.jpeg?auto=compress&cs=tinysrgb&w=800',
-      'https://images.pexels.com/photos/2724748/pexels-photo-2724748.jpeg?auto=compress&cs=tinysrgb&w=800'
-    ],
-    amenities: ['Backyard', 'Garage', 'Schools', 'Shopping', 'Parks'],
-    type: 'house',
-    rating: 4.5,
-    reviews: 15,
-    available: true,
-    featured: false
+    name: 'Headphones Bluetooth',
+    description: 'Ecouteurs zifite amajwi meza kandi zikoresha Bluetooth.',
+    price: 15000,
+    image: 'https://images.pexels.com/photos/3394665/pexels-photo-3394665.jpeg',
+    category: 'Electronics',
+    stock: 25,
+    commission: 10,
+    featured: true,
+    available: true
   },
   {
     id: '6',
-    title: 'Artist Studio Loft',
-    description: 'Creative loft space with high ceilings, natural light, and industrial charm perfect for artists and creators.',
-    price: 1900,
-    location: 'Brooklyn, NY',
-    bedrooms: 1,
-    bathrooms: 1,
-    sqft: 900,
-    images: [
-      'https://images.pexels.com/photos/2724748/pexels-photo-2724748.jpeg?auto=compress&cs=tinysrgb&w=800',  
-      'https://images.pexels.com/photos/1643383/pexels-photo-1643383.jpeg?auto=compress&cs=tinysrgb&w=800',
-      'https://images.pexels.com/photos/2062426/pexels-photo-2062426.jpeg?auto=compress&cs=tinysrgb&w=800'
-    ],
-    amenities: ['High Ceilings', 'Natural Light', 'Exposed Brick', 'WiFi', 'Storage'],
-    type: 'apartment',
-    rating: 4.4,
-    reviews: 28,
-    available: true,
-    featured: false
+    name: 'Isaha yo ku kuboko',
+    description: 'Isaha nziza igezweho.',
+    price: 12000,
+    image: 'https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg',
+    category: 'Accessories',
+    stock: 20,
+    commission: 10,
+    featured: false,
+    available: true
   }
 ];
