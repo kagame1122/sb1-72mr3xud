@@ -8,12 +8,13 @@ import {
   User,
   Globe
 } from 'lucide-react';
-
 interface HeaderProps {
   onRegister: () => void;
+  onLogin: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ onRegister }) => {
+
+const Header: React.FC<HeaderProps> = ({ onRegister, onLogin }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [language, setLanguage] = useState('rw');
 
