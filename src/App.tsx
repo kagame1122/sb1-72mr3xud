@@ -6,7 +6,7 @@ import PropertyGrid from './components/PropertyGrid';
 import Footer from './components/Footer';
 import Register from './components/Register';
 import LoginNew from './components/LoginNew';
-import Products from './components/Products';
+import Products from '../Products';
 
 function App() {
   const [showRegister, setShowRegister] = useState(false);
