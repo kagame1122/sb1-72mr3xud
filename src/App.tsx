@@ -5,7 +5,7 @@ import Hero from './components/Hero';
 import PropertyGrid from './components/PropertyGrid';
 import Footer from './components/Footer';
 import Register from './components/Register';
-import Login from './components/Login';
+import LoginNew from './components/LoginNew';
 
 function App() {
   const [showRegister, setShowRegister] = useState(false);
@@ -27,10 +27,7 @@ function App() {
       {showRegister ? (
         <Register />
       ) : showLogin ? (
-        <Login onRegister={() => {
-          setShowRegister(true);
-          setShowLogin(false);
-        }} />
+        <LoginNew />
       ) : (
         <>
           <main>
