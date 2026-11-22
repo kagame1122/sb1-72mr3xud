@@ -6,28 +6,43 @@ import PropertyGrid from './components/PropertyGrid';
 import Footer from './components/Footer';
 import Register from './components/Register';
 import LoginNew from './components/LoginNew';
+import Products from './components/Products';
 
 function App() {
   const [showRegister, setShowRegister] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
+  const [showProducts, setShowProducts] = useState(false);
 
   return (
     <div className="min-h-screen bg-white">
-      <Header
-        onRegister={() => {
-          setShowRegister(true);
-          setShowLogin(false);
-        }}
-        onLogin={() => {
-          setShowLogin(true);
-          setShowRegister(false);
-        }}
-      />
+      {!showProducts && (
+        <Header
+          onRegister={() => {
+            setShowRegister(true);
+            setShowLogin(false);
+          }}
+          onLogin={() => {
+            setShowLogin(true);
+            setShowRegister(false);
+          }}
+        />
+      )}
 
-      {showRegister ? (
+      {showProducts ? (
+        <Products />
+      ) : showRegister ? (
         <Register />
       ) : showLogin ? (
-        <LoginNew />
+        <LoginNew
+          onRegister={() => {
+            setShowRegister(true);
+            setShowLogin(false);
+          }}
+          onLoginSuccess={() => {
+            setShowProducts(true);
+            setShowLogin(false);
+          }}
+        />
       ) : (
         <>
           <main>
