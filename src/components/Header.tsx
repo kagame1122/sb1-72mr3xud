@@ -114,7 +114,14 @@ const Header: React.FC<HeaderProps> = ({ onRegister, onLogin }) => {
               <option value="fr">Français</option>
             </select>
 
-            <button>{t.login}</button>
+           <button
+  onClick={() => {
+    onLogin();
+    setIsMenuOpen(false);
+  }}
+>
+  {t.login}
+</button>
 
             <button
               onClick={() => {
