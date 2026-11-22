@@ -4,9 +4,13 @@ import { supabase } from '../supabase';
 
 interface LoginProps {
   onRegister?: () => void;
+  onLoginSuccess?: () => void;
 }
 
-const LoginNew: React.FC<LoginProps> = ({ onRegister }) => {
+const LoginNew: React.FC<LoginProps> = ({
+  onRegister,
+  onLoginSuccess
+}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
@@ -25,9 +29,10 @@ const LoginNew: React.FC<LoginProps> = ({ onRegister }) => {
     setLoading(false);
 
     if (error) {
-      setMessage(error.message);
+      setMessage('Kwinjira byanze: ' + error.message);
     } else {
       setMessage('Winjiye neza!');
+      onLoginSuccess?.();
     }
   };
 
@@ -37,6 +42,7 @@ const LoginNew: React.FC<LoginProps> = ({ onRegister }) => {
         <h1 className="text-3xl font-bold text-center mb-2">
           Murakaza neza!
         </h1>
+
         <p className="text-gray-600 text-center mb-6">
           Injira muri RUBAVU ONLINE MARKET
         </p>
