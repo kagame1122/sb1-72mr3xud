@@ -19,9 +19,9 @@ const [showLogin, setShowLogin] = useState(false);
   <Register />
 ) : showLogin ? (
   <Login onRegister={() => setShowRegister(true)} />
-) : (
-      ) : (
-        <>
+
+      
+        
           <main>
             <Hero />
             <PropertyGrid />
