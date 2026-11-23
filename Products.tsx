@@ -100,7 +100,11 @@ const translations = {
   }
 };
 
-export default function Products() {
+type ProductsProps = {
+  onBack?: () => void;
+};
+
+export default function Products({ onBack }: ProductsProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [userId, setUserId] = useState('');
   const [loading, setLoading] = useState(true);
@@ -326,12 +330,12 @@ export default function Products() {
           <button
             type="button"
             onClick={() => {
-              if (window.history.length > 1) {
-                window.history.back();
-              } else {
-                window.location.assign('/');
-              }
-            }}
+  if (onBack) {
+    onBack();
+  } else {
+    window.location.assign('/');
+  }
+}}
             className="bg-gray-200 px-4 py-2 rounded-lg flex gap-2"
           >
             <ArrowLeft size={18} /> {t.back}
