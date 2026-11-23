@@ -91,9 +91,8 @@ const Products: React.FC = () => {
     setUserId(user?.id || '');
 
     const { data, error } = await supabase
-      .from('products')
-      .select('*')
-      .order('created_at', { ascending: false });
+  .from('products')
+  .select('*');
 
     if (error) {
       setMessage('Ikibazo mu kubona ibicuruzwa: ' + error.message);
