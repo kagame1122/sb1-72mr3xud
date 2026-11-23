@@ -436,14 +436,26 @@ export default function Products() {
               />
             </label>
 
-            <button
-              type="submit"
-              disabled={saving}
-              className="bg-green-700 text-white px-5 py-3 rounded-lg flex gap-2 disabled:opacity-50"
-            >
-              <Plus size={20} />
-              {saving ? 'Birimo kubika...' : t.save}
-            </button>
+           <button
+  type="submit"
+  disabled={saving}
+  style={{
+    display: 'block',
+    width: '100%',
+    minHeight: '55px',
+    backgroundColor: '#15803d',
+    color: '#ffffff',
+    fontSize: '18px',
+    fontWeight: 'bold',
+    padding: '14px',
+    borderRadius: '10px',
+    border: 'none',
+    marginTop: '15px',
+    cursor: 'pointer'
+  }}
+>
+  {saving ? 'Birimo kubika...' : t.save}
+</button> 
 
             {!userId && (
               <p className="text-red-600">
