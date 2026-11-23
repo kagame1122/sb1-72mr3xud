@@ -37,12 +37,18 @@ function App() {
 
   return (
     <div className="min-h-screen bg-white">
-      {!showProducts && (
-        <Header
-          onRegister={() => {
-            setShowRegister(true);
-            setShowLogin(false);
-          }}
+  <Header
+  onRegister={() => {
+    setShowRegister(true);
+    setShowLogin(false);
+    setShowProducts(false);
+  }}
+  onLogin={() => {
+    setShowLogin(true);
+    setShowRegister(false);
+    setShowProducts(false);
+  }}
+/>
           onLogin={() => {
             setShowLogin(true);
             setShowRegister(false);
