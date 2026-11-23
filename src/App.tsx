@@ -1,5 +1,7 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { supabase } from './supabase';
+
 import Header from './components/Header';
 import Hero from './components/Hero';
 import PropertyGrid from './components/PropertyGrid';
@@ -12,6 +14,26 @@ function App() {
   const [showRegister, setShowRegister] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [showProducts, setShowProducts] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+
+    supabase.auth.getSession().then(({ data }) => {
+      if (mounted && data.session) {
+        setShowProducts(true);
+      }
+    });
+
+    const { data: authListener } =
+      supabase.auth.onAuthStateChange((_event, session) => {
+        setShowProducts(!!session);
+      });
+
+    return () => {
+      mounted = false;
+      authListener.subscription.unsubscribe();
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-white">
