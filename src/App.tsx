@@ -26,7 +26,9 @@ function App() {
 
     const { data: authListener } =
       supabase.auth.onAuthStateChange((_event, session) => {
-        setShowProducts(!!session);
+        if (!session) {
+          setShowProducts(false);
+        }
       });
 
     return () => {
@@ -37,27 +39,21 @@ function App() {
 
   return (
     <div className="min-h-screen bg-white">
-  <Header
-  onRegister={() => {
-    setShowRegister(true);
-    setShowLogin(false);
-    setShowProducts(false);
-  }}
-  onLogin={() => {
-    setShowLogin(true);
-    setShowRegister(false);
-    setShowProducts(false);
-  }}
-/>
-          onLogin={() => {
-            setShowLogin(true);
-            setShowRegister(false);
-          }}
-        />
-      )}
+      <Header
+        onRegister={() => {
+          setShowRegister(true);
+          setShowLogin(false);
+          setShowProducts(false);
+        }}
+        onLogin={() => {
+          setShowLogin(true);
+          setShowRegister(false);
+          setShowProducts(false);
+        }}
+      />
 
       {showProducts ? (
-        <Products />
+        <Products onBack={() => setShowProducts(false)} />
       ) : showRegister ? (
         <Register />
       ) : showLogin ? (
