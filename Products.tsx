@@ -120,11 +120,20 @@ export default function Products() {
 
   useEffect(() => {
     loadProducts();
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUserId(session?.user?.id || '');
+        loadProducts();
+      }
+    );
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
   }, []);
 
   async function loadProducts() {
-    setLoading(true);
-
     const { data: authData } = await supabase.auth.getUser();
     const currentUser = authData.user?.id || '';
 
@@ -135,7 +144,7 @@ export default function Products() {
       .select('*');
 
     if (error) {
-      alert(error.message);
+      alert('Ikibazo mu gufungura ibicuruzwa: ' + error.message);
     } else {
       setProducts((data || []) as Product[]);
     }
@@ -146,7 +155,12 @@ export default function Products() {
   async function addProduct(e: React.FormEvent) {
     e.preventDefault();
 
-    if (!userId) {
+    if (saving) return;
+
+    const { data: authData } = await supabase.auth.getUser();
+    const currentUser = authData.user?.id || '';
+
+    if (!currentUser) {
       alert(t.login);
       return;
     }
@@ -158,54 +172,63 @@ export default function Products() {
 
     setSaving(true);
 
-    let imageUrl: string | null = null;
+    try {
+      let imageUrl: string | null = null;
 
-    if (photo) {
-      const safeName = photo.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-      const filePath = `${userId}/${Date.now()}-${safeName}`;
+      if (photo) {
+        const safeName = photo.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+        const filePath = `${currentUser}/${Date.now()}-${safeName}`;
 
-      const { error: uploadError } = await supabase.storage
-        .from('product-images')
-        .upload(filePath, photo);
+        const { error: uploadError } = await supabase.storage
+          .from('product-images')
+          .upload(filePath, photo);
 
-      if (uploadError) {
-        alert('Ifoto yanze kujyamo: ' + uploadError.message);
-        setSaving(false);
+        if (uploadError) {
+          alert('Ifoto yanze kujyamo: ' + uploadError.message);
+          return;
+        }
+
+        const { data: imageData } = supabase.storage
+          .from('product-images')
+          .getPublicUrl(filePath);
+
+        imageUrl = imageData.publicUrl;
+      }
+
+      const { error } = await supabase
+        .from('products')
+        .insert({
+          seller_id: currentUser,
+          title: title.trim(),
+          description: description.trim(),
+          price: Number(price),
+          category: category.trim(),
+          image_url: imageUrl,
+          status: 'pending'
+        });
+
+      if (error) {
+        alert('Igicuruzwa nticyabitswe: ' + error.message);
         return;
       }
 
-      const { data: imageData } = supabase.storage
-        .from('product-images')
-        .getPublicUrl(filePath);
-
-      imageUrl = imageData.publicUrl;
-    }
-
-    const { error } = await supabase
-      .from('products')
-      .insert({
-        seller_id: userId,
-        title,
-        description,
-        price: Number(price),
-        category,
-        image_url: imageUrl,
-        status: 'pending'
-      });
-
-    if (error) {
-      alert(error.message);
-    } else {
       alert(t.success);
+
       setTitle('');
       setDescription('');
       setPrice('');
       setCategory('');
       setPhoto(null);
-      await loadProducts();
-    }
 
-    setSaving(false);
+      const fileInput = document.getElementById('product-photo') as HTMLInputElement | null;
+      if (fileInput) fileInput.value = '';
+
+      await loadProducts();
+    } catch (error) {
+      alert('Habaye ikibazo: ' + String(error));
+    } finally {
+      setSaving(false);
+    }
   }
 
   async function changeStatus(id: number, status: string) {
@@ -214,17 +237,29 @@ export default function Products() {
       return;
     }
 
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from('products')
       .update({ status })
-      .eq('id', id);
+      .eq('id', id)
+      .select('id')
+      .maybeSingle();
 
     if (error) {
       alert('Ntibyakozwe: ' + error.message);
-    } else {
-      alert(status === 'approved' ? 'Igicuruzwa cyemejwe!' : 'Igicuruzwa cyanzwe.');
-      await loadProducts();
+      return;
     }
+
+    if (!data) {
+      alert('Igicuruzwa nticyahinduwe. Reba uburenganzira bw’ubuyobozi.');
+      return;
+    }
+
+    alert(status === 'approved'
+      ? 'Igicuruzwa cyemejwe!'
+      : 'Igicuruzwa cyanzwe.'
+    );
+
+    await loadProducts();
   }
 
   async function deleteProduct(id: number) {
@@ -236,8 +271,9 @@ export default function Products() {
       .eq('id', id);
 
     if (error) {
-      alert(error.message);
+      alert('Ntibyashobotse gusiba: ' + error.message);
     } else {
+      alert('Igicuruzwa cyasibwe.');
       await loadProducts();
     }
   }
@@ -286,16 +322,24 @@ export default function Products() {
       </header>
 
       <main className="max-w-6xl mx-auto p-4">
-        <div className="flex gap-3 mb-5">
+        <div className="flex flex-wrap gap-3 mb-5">
           <button
-            onClick={() => window.history.back()}
+            type="button"
+            onClick={() => {
+              if (window.history.length > 1) {
+                window.history.back();
+              } else {
+                window.location.assign('/');
+              }
+            }}
             className="bg-gray-200 px-4 py-2 rounded-lg flex gap-2"
           >
             <ArrowLeft size={18} /> {t.back}
           </button>
 
           <button
-            onClick={() => window.location.href = '/'}
+            type="button"
+            onClick={() => window.location.assign('/')}
             className="bg-green-700 text-white px-4 py-2 rounded-lg flex gap-2"
           >
             <Home size={18} /> {t.home}
@@ -324,6 +368,7 @@ export default function Products() {
 
                   <div className="flex flex-wrap gap-3 mt-3">
                     <button
+                      type="button"
                       onClick={() => changeStatus(product.id, 'approved')}
                       className="bg-green-600 text-white px-4 py-2 rounded-lg flex gap-2"
                     >
@@ -331,6 +376,7 @@ export default function Products() {
                     </button>
 
                     <button
+                      type="button"
                       onClick={() => changeStatus(product.id, 'rejected')}
                       className="bg-red-600 text-white px-4 py-2 rounded-lg flex gap-2"
                     >
@@ -343,64 +389,69 @@ export default function Products() {
           </section>
         )}
 
-        {userId && (
-          <section className="bg-white rounded-xl shadow p-4 mb-6">
-            <h2 className="text-xl font-bold mb-4">{t.add}</h2>
+        <section className="bg-white rounded-xl shadow p-4 mb-6">
+          <h2 className="text-xl font-bold mb-4">{t.add}</h2>
 
-            <form onSubmit={addProduct} className="space-y-3">
+          <form onSubmit={addProduct} className="space-y-3">
+            <input
+              value={title}
+              onChange={e => setTitle(e.target.value)}
+              placeholder={t.name}
+              className="w-full border rounded-lg p-3"
+              required
+            />
+
+            <textarea
+              value={description}
+              onChange={e => setDescription(e.target.value)}
+              placeholder={t.description}
+              className="w-full border rounded-lg p-3"
+            />
+
+            <input
+              type="number"
+              value={price}
+              onChange={e => setPrice(e.target.value)}
+              placeholder={t.price}
+              className="w-full border rounded-lg p-3"
+              min="1"
+              required
+            />
+
+            <input
+              value={category}
+              onChange={e => setCategory(e.target.value)}
+              placeholder={t.category}
+              className="w-full border rounded-lg p-3"
+            />
+
+            <label className="flex flex-wrap items-center gap-2 border rounded-lg p-3">
+              <Image size={20} />
+              {t.photo}
               <input
-                value={title}
-                onChange={e => setTitle(e.target.value)}
-                placeholder={t.name}
-                className="w-full border rounded-lg p-3"
-                required
+                id="product-photo"
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+                onChange={e => setPhoto(e.target.files?.[0] || null)}
               />
+            </label>
 
-              <textarea
-                value={description}
-                onChange={e => setDescription(e.target.value)}
-                placeholder={t.description}
-                className="w-full border rounded-lg p-3"
-              />
+            <button
+              type="submit"
+              disabled={saving}
+              className="bg-green-700 text-white px-5 py-3 rounded-lg flex gap-2 disabled:opacity-50"
+            >
+              <Plus size={20} />
+              {saving ? 'Birimo kubika...' : t.save}
+            </button>
 
-              <input
-                type="number"
-                value={price}
-                onChange={e => setPrice(e.target.value)}
-                placeholder={t.price}
-                className="w-full border rounded-lg p-3"
-                min="1"
-                required
-              />
-
-              <input
-                value={category}
-                onChange={e => setCategory(e.target.value)}
-                placeholder={t.category}
-                className="w-full border rounded-lg p-3"
-              />
-
-              <label className="flex items-center gap-2 border rounded-lg p-3">
-                <Image size={20} />
-                {t.photo}
-                <input
-                  type="file"
-                  accept="image/png,image/jpeg,image/webp"
-                  onChange={e => setPhoto(e.target.files?.[0] || null)}
-                />
-              </label>
-
-              <button
-                type="submit"
-                disabled={saving}
-                className="bg-green-700 text-white px-5 py-3 rounded-lg flex gap-2 disabled:opacity-50"
-              >
-                <Plus size={20} />
-                {saving ? 'Birimo kubika...' : t.save}
-              </button>
-            </form>
-          </section>
-        )}
+            {!userId && (
+              <p className="text-red-600">
+                Banza winjire muri konti yawe kugira ngo ubike igicuruzwa.
+              </p>
+            )}
+          </form>
+        </section>
 
         <div className="relative mb-5">
           <Search className="absolute left-3 top-3 text-gray-400" />
@@ -455,6 +506,7 @@ export default function Products() {
 
                   {product.status === 'approved' && (
                     <button
+                      type="button"
                       onClick={() => setCart(old => old + 1)}
                       className="bg-green-700 text-white rounded-lg px-4 py-2 mt-3"
                     >
@@ -466,6 +518,7 @@ export default function Products() {
                   {product.seller_id === userId &&
                     product.status === 'pending' && (
                       <button
+                        type="button"
                         onClick={() => deleteProduct(product.id)}
                         className="bg-red-100 text-red-700 rounded-lg px-3 py-2 mt-3 ml-2"
                       >
