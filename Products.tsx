@@ -1,7 +1,10 @@
 
 import React, { useEffect, useState } from 'react';
 import { supabase } from './src/supabase';
-import { Search, ShoppingCart, Plus, Trash2, Image } from 'lucide-react';
+import {
+  Search, ShoppingCart, Plus, Trash2, Image,
+  ArrowLeft, Home, CheckCircle, XCircle
+} from 'lucide-react';
 
 type Product = {
   id: number;
@@ -13,6 +16,8 @@ type Product = {
   status: string;
   category: string;
 };
+
+const ADMIN_USER_ID = 'e587e318-5bc4-4d1b-8757-d3fb7033e809';
 
 const Products: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -28,6 +33,8 @@ const Products: React.FC = () => {
   const [message, setMessage] = useState('');
   const [language, setLanguage] = useState('rw');
 
+  const isAdmin = userId === ADMIN_USER_ID;
+
   const words: Record<string, Record<string, string>> = {
     rw: {
       welcome: 'Murakaza neza! Dore ibicuruzwa bihari.',
@@ -42,9 +49,15 @@ const Products: React.FC = () => {
       cart: 'Shyira mu gitebo',
       pending: 'Gitegereje kwemezwa',
       approved: 'Cyemejwe',
+      rejected: 'Cyanzwe',
       delete: 'Siba',
+      approve: 'Emeza',
+      reject: 'Anga',
       empty: 'Nta bicuruzwa bibonetse.',
       loading: 'Tegereza...',
+      admin: 'Ubuyobozi - Emeza ibicuruzwa',
+      back: 'Subira inyuma',
+      home: 'Ahabanza',
     },
     en: {
       welcome: 'Welcome! Here are available products.',
@@ -59,9 +72,15 @@ const Products: React.FC = () => {
       cart: 'Add to cart',
       pending: 'Awaiting approval',
       approved: 'Approved',
+      rejected: 'Rejected',
       delete: 'Delete',
+      approve: 'Approve',
+      reject: 'Reject',
       empty: 'No products found.',
       loading: 'Please wait...',
+      admin: 'Admin - Review products',
+      back: 'Back',
+      home: 'Home',
     },
     fr: {
       welcome: 'Bienvenue ! Voici les produits disponibles.',
@@ -76,9 +95,15 @@ const Products: React.FC = () => {
       cart: 'Ajouter au panier',
       pending: 'En attente de validation',
       approved: 'Approuvé',
+      rejected: 'Refusé',
       delete: 'Supprimer',
+      approve: 'Approuver',
+      reject: 'Refuser',
       empty: 'Aucun produit trouvé.',
       loading: 'Veuillez patienter...',
+      admin: 'Administration - Vérifier les produits',
+      back: 'Retour',
+      home: 'Accueil',
     },
   };
 
@@ -91,8 +116,8 @@ const Products: React.FC = () => {
     setUserId(user?.id || '');
 
     const { data, error } = await supabase
-  .from('products')
-  .select('*');
+      .from('products')
+      .select('*');
 
     if (error) {
       setMessage('Ikibazo mu kubona ibicuruzwa: ' + error.message);
@@ -187,6 +212,34 @@ const Products: React.FC = () => {
     await loadProducts();
   };
 
+  const updateProductStatus = async (
+    id: number,
+    status: 'approved' | 'rejected'
+  ) => {
+    if (!isAdmin) {
+      setMessage('Ntabwo wemerewe gukora iki gikorwa.');
+      return;
+    }
+
+    const { error } = await supabase
+      .from('products')
+      .update({ status })
+      .eq('id', id);
+
+    if (error) {
+      setMessage('Ntibyashobotse: ' + error.message);
+      return;
+    }
+
+    setMessage(
+      status === 'approved'
+        ? 'Igicuruzwa cyemejwe!'
+        : 'Igicuruzwa cyanzwe.'
+    );
+
+    await loadProducts();
+  };
+
   const filtered = products.filter(product =>
     product.title.toLowerCase().includes(search.toLowerCase())
   );
@@ -195,7 +248,23 @@ const Products: React.FC = () => {
     <div className="min-h-screen bg-gray-100 pt-28 px-4 pb-24">
       <div className="max-w-6xl mx-auto">
 
-        <div className="flex justify-end mb-4">
+        <div className="flex justify-between items-center mb-5">
+          <div className="flex gap-2">
+            <button
+              onClick={() => window.history.back()}
+              className="bg-white border rounded-lg px-3 py-2 flex items-center gap-2"
+            >
+              <ArrowLeft size={18} /> {t.back}
+            </button>
+
+            <button
+              onClick={() => window.location.href = '/'}
+              className="bg-white border rounded-lg px-3 py-2 flex items-center gap-2"
+            >
+              <Home size={18} /> {t.home}
+            </button>
+          </div>
+
           <select
             value={language}
             onChange={e => setLanguage(e.target.value)}
@@ -214,6 +283,12 @@ const Products: React.FC = () => {
         <p className="text-center text-gray-600 mb-6">
           {t.welcome}
         </p>
+
+        {isAdmin && (
+          <div className="bg-emerald-100 text-emerald-800 p-4 rounded-xl mb-6 text-center font-bold">
+            {t.admin}
+          </div>
+        )}
 
         {message && (
           <div className="bg-white p-4 rounded-xl mb-5 text-center text-emerald-700">
@@ -319,6 +394,10 @@ const Products: React.FC = () => {
                 {Number(product.price).toLocaleString()} RWF
               </p>
 
+              <p className="text-sm text-gray-500 mb-3">
+                {product.category}
+              </p>
+
               {product.status === 'pending' && (
                 <p className="text-orange-600 text-sm font-bold mb-3">
                   {t.pending}
@@ -329,6 +408,32 @@ const Products: React.FC = () => {
                 <p className="text-green-700 text-sm font-bold mb-3">
                   {t.approved}
                 </p>
+              )}
+
+              {product.status === 'rejected' && (
+                <p className="text-red-600 text-sm font-bold mb-3">
+                  {t.rejected}
+                </p>
+              )}
+
+              {isAdmin && product.status === 'pending' && (
+                <div className="flex gap-2 mb-3">
+                  <button
+                    onClick={() => updateProductStatus(product.id, 'approved')}
+                    className="flex-1 bg-green-600 text-white py-3 rounded-lg font-bold"
+                  >
+                    <CheckCircle className="inline mr-1" size={18} />
+                    {t.approve}
+                  </button>
+
+                  <button
+                    onClick={() => updateProductStatus(product.id, 'rejected')}
+                    className="flex-1 bg-red-600 text-white py-3 rounded-lg font-bold"
+                  >
+                    <XCircle className="inline mr-1" size={18} />
+                    {t.reject}
+                  </button>
+                </div>
               )}
 
               {product.status === 'approved' && (
