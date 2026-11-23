@@ -19,138 +19,149 @@ type Product = {
 
 const ADMIN_USER_ID = 'e587e318-5bc4-4d1b-8757-d3fb7033e809';
 
-const Products: React.FC = () => {
+const translations = {
+  rw: {
+    title: 'RUBAVU ONLINE MARKET',
+    search: 'Shakisha ibicuruzwa...',
+    add: 'Ongeraho igicuruzwa',
+    name: 'Izina ry’igicuruzwa',
+    description: 'Ibisobanuro',
+    price: 'Igiciro (RWF)',
+    category: 'Icyiciro',
+    photo: 'Hitamo ifoto',
+    save: 'Bika igicuruzwa',
+    pending: 'Gitegereje kwemezwa',
+    approved: 'Cyemejwe',
+    rejected: 'Cyanzwe',
+    admin: 'Ubuyobozi - Emeza ibicuruzwa',
+    approve: 'Emeza',
+    reject: 'Hakana',
+    delete: 'Siba',
+    cart: 'Ibyo watoranyije',
+    empty: 'Nta bicuruzwa bibonetse',
+    success: 'Igicuruzwa cyabitswe! Kirategereje kwemezwa.',
+    login: 'Banza winjire muri konti yawe.',
+    back: 'Subira inyuma',
+    home: 'Ahabanza',
+    all: 'Ibicuruzwa byose',
+    loading: 'Birimo gufunguka...'
+  },
+  en: {
+    title: 'RUBAVU ONLINE MARKET',
+    search: 'Search products...',
+    add: 'Add a product',
+    name: 'Product name',
+    description: 'Description',
+    price: 'Price (RWF)',
+    category: 'Category',
+    photo: 'Choose photo',
+    save: 'Save product',
+    pending: 'Waiting for approval',
+    approved: 'Approved',
+    rejected: 'Rejected',
+    admin: 'Administration - Approve products',
+    approve: 'Approve',
+    reject: 'Reject',
+    delete: 'Delete',
+    cart: 'Shopping cart',
+    empty: 'No products found',
+    success: 'Product saved! Waiting for approval.',
+    login: 'Please log in first.',
+    back: 'Go back',
+    home: 'Home',
+    all: 'All products',
+    loading: 'Loading...'
+  },
+  fr: {
+    title: 'RUBAVU ONLINE MARKET',
+    search: 'Rechercher des produits...',
+    add: 'Ajouter un produit',
+    name: 'Nom du produit',
+    description: 'Description',
+    price: 'Prix (RWF)',
+    category: 'Catégorie',
+    photo: 'Choisir une photo',
+    save: 'Enregistrer',
+    pending: 'En attente de validation',
+    approved: 'Approuvé',
+    rejected: 'Refusé',
+    admin: 'Administration - Valider les produits',
+    approve: 'Approuver',
+    reject: 'Refuser',
+    delete: 'Supprimer',
+    cart: 'Panier',
+    empty: 'Aucun produit trouvé',
+    success: 'Produit enregistré ! En attente de validation.',
+    login: 'Veuillez vous connecter.',
+    back: 'Retour',
+    home: 'Accueil',
+    all: 'Tous les produits',
+    loading: 'Chargement...'
+  }
+};
+
+export default function Products() {
   const [products, setProducts] = useState<Product[]>([]);
-  const [search, setSearch] = useState('');
-  const [cart, setCart] = useState<number[]>([]);
   const [userId, setUserId] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [language, setLanguage] = useState<'rw' | 'en' | 'fr'>('rw');
+  const [search, setSearch] = useState('');
+  const [cart, setCart] = useState(0);
+
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [category, setCategory] = useState('');
   const [photo, setPhoto] = useState<File | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
-  const [language, setLanguage] = useState('rw');
 
+  const t = translations[language];
   const isAdmin = userId === ADMIN_USER_ID;
 
-  const words: Record<string, Record<string, string>> = {
-    rw: {
-      welcome: 'Murakaza neza! Dore ibicuruzwa bihari.',
-      search: 'Shakisha igicuruzwa...',
-      add: 'Ongeramo igicuruzwa',
-      title: 'Izina ry’igicuruzwa',
-      description: 'Ibisobanuro',
-      price: 'Igiciro muri RWF',
-      category: 'Icyiciro',
-      photo: 'Hitamo ifoto',
-      save: 'Bika igicuruzwa',
-      cart: 'Shyira mu gitebo',
-      pending: 'Gitegereje kwemezwa',
-      approved: 'Cyemejwe',
-      rejected: 'Cyanzwe',
-      delete: 'Siba',
-      approve: 'Emeza',
-      reject: 'Anga',
-      empty: 'Nta bicuruzwa bibonetse.',
-      loading: 'Tegereza...',
-      admin: 'Ubuyobozi - Emeza ibicuruzwa',
-      back: 'Subira inyuma',
-      home: 'Ahabanza',
-    },
-    en: {
-      welcome: 'Welcome! Here are available products.',
-      search: 'Search products...',
-      add: 'Add a product',
-      title: 'Product name',
-      description: 'Description',
-      price: 'Price in RWF',
-      category: 'Category',
-      photo: 'Choose photo',
-      save: 'Save product',
-      cart: 'Add to cart',
-      pending: 'Awaiting approval',
-      approved: 'Approved',
-      rejected: 'Rejected',
-      delete: 'Delete',
-      approve: 'Approve',
-      reject: 'Reject',
-      empty: 'No products found.',
-      loading: 'Please wait...',
-      admin: 'Admin - Review products',
-      back: 'Back',
-      home: 'Home',
-    },
-    fr: {
-      welcome: 'Bienvenue ! Voici les produits disponibles.',
-      search: 'Rechercher un produit...',
-      add: 'Ajouter un produit',
-      title: 'Nom du produit',
-      description: 'Description',
-      price: 'Prix en RWF',
-      category: 'Catégorie',
-      photo: 'Choisir une photo',
-      save: 'Enregistrer le produit',
-      cart: 'Ajouter au panier',
-      pending: 'En attente de validation',
-      approved: 'Approuvé',
-      rejected: 'Refusé',
-      delete: 'Supprimer',
-      approve: 'Approuver',
-      reject: 'Refuser',
-      empty: 'Aucun produit trouvé.',
-      loading: 'Veuillez patienter...',
-      admin: 'Administration - Vérifier les produits',
-      back: 'Retour',
-      home: 'Accueil',
-    },
-  };
+  useEffect(() => {
+    loadProducts();
+  }, []);
 
-  const t = words[language];
+  async function loadProducts() {
+    setLoading(true);
 
-  const loadProducts = async () => {
     const { data: authData } = await supabase.auth.getUser();
-    const user = authData.user;
+    const currentUser = authData.user?.id || '';
 
-    setUserId(user?.id || '');
+    setUserId(currentUser);
 
     const { data, error } = await supabase
       .from('products')
       .select('*');
 
     if (error) {
-      setMessage('Ikibazo mu kubona ibicuruzwa: ' + error.message);
-      return;
+      alert(error.message);
+    } else {
+      setProducts((data || []) as Product[]);
     }
 
-    setProducts((data || []) as Product[]);
-  };
+    setLoading(false);
+  }
 
-  useEffect(() => {
-    loadProducts();
-  }, []);
-
-  const addProduct = async (e: React.FormEvent) => {
+  async function addProduct(e: React.FormEvent) {
     e.preventDefault();
-    setMessage('');
 
     if (!userId) {
-      setMessage('Banza winjire muri konti yawe.');
+      alert(t.login);
       return;
     }
 
     if (!title.trim() || !price || Number(price) <= 0) {
-      setMessage('Uzuza izina n’igiciro cy’igicuruzwa.');
+      alert('Uzuza izina n’igiciro cy’igicuruzwa.');
       return;
     }
 
-    setLoading(true);
+    setSaving(true);
 
     let imageUrl: string | null = null;
 
     if (photo) {
-      const safeName = photo.name.replace(/[^a-zA-Z0-9.-]/g, '-');
+      const safeName = photo.name.replace(/[^a-zA-Z0-9.-]/g, '_');
       const filePath = `${userId}/${Date.now()}-${safeName}`;
 
       const { error: uploadError } = await supabase.storage
@@ -158,8 +169,8 @@ const Products: React.FC = () => {
         .upload(filePath, photo);
 
       if (uploadError) {
-        setMessage('Ifoto ntiyoherejwe: ' + uploadError.message);
-        setLoading(false);
+        alert('Ifoto yanze kujyamo: ' + uploadError.message);
+        setSaving(false);
         return;
       }
 
@@ -170,54 +181,36 @@ const Products: React.FC = () => {
       imageUrl = imageData.publicUrl;
     }
 
-    const { error } = await supabase.from('products').insert({
-      seller_id: userId,
-      title: title.trim(),
-      description: description.trim(),
-      price: Number(price),
-      category: category.trim(),
-      image_url: imageUrl,
-      status: 'pending',
-    });
-
-    setLoading(false);
-
-    if (error) {
-      setMessage('Igicuruzwa nticyabitswe: ' + error.message);
-      return;
-    }
-
-    setMessage('Igicuruzwa cyabitswe! Kirategereje kwemezwa.');
-    setTitle('');
-    setDescription('');
-    setPrice('');
-    setCategory('');
-    setPhoto(null);
-
-    await loadProducts();
-  };
-
-  const deleteProduct = async (id: number) => {
     const { error } = await supabase
       .from('products')
-      .delete()
-      .eq('id', id);
+      .insert({
+        seller_id: userId,
+        title,
+        description,
+        price: Number(price),
+        category,
+        image_url: imageUrl,
+        status: 'pending'
+      });
 
     if (error) {
-      setMessage('Ntibyashobotse gusiba: ' + error.message);
-      return;
+      alert(error.message);
+    } else {
+      alert(t.success);
+      setTitle('');
+      setDescription('');
+      setPrice('');
+      setCategory('');
+      setPhoto(null);
+      await loadProducts();
     }
 
-    setMessage('Igicuruzwa cyasibwe.');
-    await loadProducts();
-  };
+    setSaving(false);
+  }
 
-  const updateProductStatus = async (
-    id: number,
-    status: 'approved' | 'rejected'
-  ) => {
+  async function changeStatus(id: number, status: string) {
     if (!isAdmin) {
-      setMessage('Ntabwo wemerewe gukora iki gikorwa.');
+      alert('Ntabwo wemerewe gukora iki gikorwa.');
       return;
     }
 
@@ -227,253 +220,265 @@ const Products: React.FC = () => {
       .eq('id', id);
 
     if (error) {
-      setMessage('Ntibyashobotse: ' + error.message);
-      return;
+      alert('Ntibyakozwe: ' + error.message);
+    } else {
+      alert(status === 'approved' ? 'Igicuruzwa cyemejwe!' : 'Igicuruzwa cyanzwe.');
+      await loadProducts();
     }
+  }
 
-    setMessage(
-      status === 'approved'
-        ? 'Igicuruzwa cyemejwe!'
-        : 'Igicuruzwa cyanzwe.'
-    );
+  async function deleteProduct(id: number) {
+    if (!confirm('Urashaka gusiba iki gicuruzwa?')) return;
 
-    await loadProducts();
-  };
+    const { error } = await supabase
+      .from('products')
+      .delete()
+      .eq('id', id);
 
-  const filtered = products.filter(product =>
-    product.title.toLowerCase().includes(search.toLowerCase())
+    if (error) {
+      alert(error.message);
+    } else {
+      await loadProducts();
+    }
+  }
+
+  const visibleProducts = products.filter(product => {
+    const isApproved = product.status === 'approved';
+    const isOwn = product.seller_id === userId;
+    const canSee = isApproved || isOwn || isAdmin;
+
+    const matchesSearch =
+      product.title.toLowerCase().includes(search.toLowerCase()) ||
+      (product.category || '').toLowerCase().includes(search.toLowerCase());
+
+    return canSee && matchesSearch;
+  });
+
+  const pendingProducts = products.filter(
+    product => product.status === 'pending'
   );
 
   return (
-    <div className="min-h-screen bg-gray-100 pt-28 px-4 pb-24">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-gray-50">
+      <header className="bg-white shadow p-4">
+        <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-3">
+          <h1 className="text-xl font-bold text-green-700">
+            {t.title}
+          </h1>
 
-        <div className="flex justify-between items-center mb-5">
-          <div className="flex gap-2">
-            <button
-              onClick={() => window.history.back()}
-              className="bg-white border rounded-lg px-3 py-2 flex items-center gap-2"
+          <div className="flex gap-2 items-center">
+            <select
+              value={language}
+              onChange={e => setLanguage(e.target.value as 'rw' | 'en' | 'fr')}
+              className="border rounded-lg p-2"
             >
-              <ArrowLeft size={18} /> {t.back}
-            </button>
+              <option value="rw">Kinyarwanda</option>
+              <option value="en">English</option>
+              <option value="fr">Français</option>
+            </select>
 
-            <button
-              onClick={() => window.location.href = '/'}
-              className="bg-white border rounded-lg px-3 py-2 flex items-center gap-2"
-            >
-              <Home size={18} /> {t.home}
-            </button>
+            <span className="flex items-center gap-1">
+              <ShoppingCart size={20} />
+              {cart}
+            </span>
           </div>
-
-          <select
-            value={language}
-            onChange={e => setLanguage(e.target.value)}
-            className="p-2 rounded-lg border bg-white"
-          >
-            <option value="rw">Kinyarwanda</option>
-            <option value="en">English</option>
-            <option value="fr">Français</option>
-          </select>
         </div>
+      </header>
 
-        <h1 className="text-3xl font-bold text-emerald-700 text-center mb-2">
-          RUBAVU ONLINE MARKET
-        </h1>
+      <main className="max-w-6xl mx-auto p-4">
+        <div className="flex gap-3 mb-5">
+          <button
+            onClick={() => window.history.back()}
+            className="bg-gray-200 px-4 py-2 rounded-lg flex gap-2"
+          >
+            <ArrowLeft size={18} /> {t.back}
+          </button>
 
-        <p className="text-center text-gray-600 mb-6">
-          {t.welcome}
-        </p>
+          <button
+            onClick={() => window.location.href = '/'}
+            className="bg-green-700 text-white px-4 py-2 rounded-lg flex gap-2"
+          >
+            <Home size={18} /> {t.home}
+          </button>
+        </div>
 
         {isAdmin && (
-          <div className="bg-emerald-100 text-emerald-800 p-4 rounded-xl mb-6 text-center font-bold">
-            {t.admin}
-          </div>
+          <section className="bg-white rounded-xl shadow p-4 mb-6">
+            <h2 className="text-xl font-bold text-green-700 mb-4">
+              {t.admin}
+            </h2>
+
+            {pendingProducts.length === 0 ? (
+              <p>Nta bicuruzwa bitegereje kwemezwa.</p>
+            ) : (
+              pendingProducts.map(product => (
+                <div
+                  key={product.id}
+                  className="border rounded-lg p-4 mb-3"
+                >
+                  <h3 className="font-bold">{product.title}</h3>
+                  <p>{product.description}</p>
+                  <p className="font-bold">
+                    {Number(product.price).toLocaleString()} RWF
+                  </p>
+
+                  <div className="flex flex-wrap gap-3 mt-3">
+                    <button
+                      onClick={() => changeStatus(product.id, 'approved')}
+                      className="bg-green-600 text-white px-4 py-2 rounded-lg flex gap-2"
+                    >
+                      <CheckCircle size={18} /> {t.approve}
+                    </button>
+
+                    <button
+                      onClick={() => changeStatus(product.id, 'rejected')}
+                      className="bg-red-600 text-white px-4 py-2 rounded-lg flex gap-2"
+                    >
+                      <XCircle size={18} /> {t.reject}
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+          </section>
         )}
 
-        {message && (
-          <div className="bg-white p-4 rounded-xl mb-5 text-center text-emerald-700">
-            {message}
-          </div>
-        )}
+        {userId && (
+          <section className="bg-white rounded-xl shadow p-4 mb-6">
+            <h2 className="text-xl font-bold mb-4">{t.add}</h2>
 
-        <div className="bg-white rounded-2xl shadow p-5 mb-8">
-          <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-            <Plus /> {t.add}
-          </h2>
-
-          <form onSubmit={addProduct} className="space-y-4">
-            <input
-              value={title}
-              onChange={e => setTitle(e.target.value)}
-              placeholder={t.title}
-              className="w-full border rounded-lg p-3"
-              required
-            />
-
-            <textarea
-              value={description}
-              onChange={e => setDescription(e.target.value)}
-              placeholder={t.description}
-              className="w-full border rounded-lg p-3"
-              rows={3}
-            />
-
-            <input
-              type="number"
-              min="1"
-              value={price}
-              onChange={e => setPrice(e.target.value)}
-              placeholder={t.price}
-              className="w-full border rounded-lg p-3"
-              required
-            />
-
-            <input
-              value={category}
-              onChange={e => setCategory(e.target.value)}
-              placeholder={t.category}
-              className="w-full border rounded-lg p-3"
-            />
-
-            <label className="block border rounded-lg p-3 bg-gray-50">
-              <span className="flex items-center gap-2 mb-2">
-                <Image size={20} /> {t.photo}
-              </span>
+            <form onSubmit={addProduct} className="space-y-3">
               <input
-                type="file"
-                accept="image/png,image/jpeg,image/webp"
-                onChange={e => setPhoto(e.target.files?.[0] || null)}
+                value={title}
+                onChange={e => setTitle(e.target.value)}
+                placeholder={t.name}
+                className="w-full border rounded-lg p-3"
+                required
               />
-            </label>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-emerald-600 text-white font-bold py-3 rounded-lg disabled:opacity-50"
-            >
-              {loading ? t.loading : t.save}
-            </button>
-          </form>
-        </div>
+              <textarea
+                value={description}
+                onChange={e => setDescription(e.target.value)}
+                placeholder={t.description}
+                className="w-full border rounded-lg p-3"
+              />
 
-        <div className="flex bg-white rounded-xl p-3 mb-8 shadow">
-          <Search className="text-gray-500 mr-2" />
+              <input
+                type="number"
+                value={price}
+                onChange={e => setPrice(e.target.value)}
+                placeholder={t.price}
+                className="w-full border rounded-lg p-3"
+                min="1"
+                required
+              />
+
+              <input
+                value={category}
+                onChange={e => setCategory(e.target.value)}
+                placeholder={t.category}
+                className="w-full border rounded-lg p-3"
+              />
+
+              <label className="flex items-center gap-2 border rounded-lg p-3">
+                <Image size={20} />
+                {t.photo}
+                <input
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  onChange={e => setPhoto(e.target.files?.[0] || null)}
+                />
+              </label>
+
+              <button
+                type="submit"
+                disabled={saving}
+                className="bg-green-700 text-white px-5 py-3 rounded-lg flex gap-2 disabled:opacity-50"
+              >
+                <Plus size={20} />
+                {saving ? 'Birimo kubika...' : t.save}
+              </button>
+            </form>
+          </section>
+        )}
+
+        <div className="relative mb-5">
+          <Search className="absolute left-3 top-3 text-gray-400" />
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder={t.search}
-            className="w-full outline-none"
+            className="w-full border rounded-lg p-3 pl-10"
           />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filtered.map(product => (
-            <div key={product.id} className="bg-white rounded-2xl shadow p-5">
+        <h2 className="text-xl font-bold mb-4">{t.all}</h2>
 
-              {product.image_url ? (
-                <img
-                  src={product.image_url}
-                  alt={product.title}
-                  className="w-full h-48 object-cover rounded-xl"
-                />
-              ) : (
-                <div className="h-48 bg-gray-100 rounded-xl flex items-center justify-center text-gray-400">
-                  <Image size={48} />
-                </div>
-              )}
-
-              <h2 className="text-xl font-bold mt-4">
-                {product.title}
-              </h2>
-
-              <p className="text-gray-600 my-2">
-                {product.description}
-              </p>
-
-              <p className="text-emerald-700 font-bold text-lg my-3">
-                {Number(product.price).toLocaleString()} RWF
-              </p>
-
-              <p className="text-sm text-gray-500 mb-3">
-                {product.category}
-              </p>
-
-              {product.status === 'pending' && (
-                <p className="text-orange-600 text-sm font-bold mb-3">
-                  {t.pending}
-                </p>
-              )}
-
-              {product.status === 'approved' && (
-                <p className="text-green-700 text-sm font-bold mb-3">
-                  {t.approved}
-                </p>
-              )}
-
-              {product.status === 'rejected' && (
-                <p className="text-red-600 text-sm font-bold mb-3">
-                  {t.rejected}
-                </p>
-              )}
-
-              {isAdmin && product.status === 'pending' && (
-                <div className="flex gap-2 mb-3">
-                  <button
-                    onClick={() => updateProductStatus(product.id, 'approved')}
-                    className="flex-1 bg-green-600 text-white py-3 rounded-lg font-bold"
-                  >
-                    <CheckCircle className="inline mr-1" size={18} />
-                    {t.approve}
-                  </button>
-
-                  <button
-                    onClick={() => updateProductStatus(product.id, 'rejected')}
-                    className="flex-1 bg-red-600 text-white py-3 rounded-lg font-bold"
-                  >
-                    <XCircle className="inline mr-1" size={18} />
-                    {t.reject}
-                  </button>
-                </div>
-              )}
-
-              {product.status === 'approved' && (
-                <button
-                  onClick={() => setCart([...cart, product.id])}
-                  className="w-full bg-emerald-600 text-white py-3 rounded-lg font-bold"
-                >
-                  <ShoppingCart className="inline mr-2" size={18} />
-                  {t.cart}
-                </button>
-              )}
-
-              {product.seller_id === userId &&
-                product.status === 'pending' && (
-                  <button
-                    onClick={() => deleteProduct(product.id)}
-                    className="w-full bg-red-600 text-white py-3 rounded-lg mt-3"
-                  >
-                    <Trash2 className="inline mr-2" size={18} />
-                    {t.delete}
-                  </button>
+        {loading ? (
+          <p>{t.loading}</p>
+        ) : visibleProducts.length === 0 ? (
+          <p>{t.empty}</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {visibleProducts.map(product => (
+              <div
+                key={product.id}
+                className="bg-white rounded-xl shadow overflow-hidden"
+              >
+                {product.image_url && (
+                  <img
+                    src={product.image_url}
+                    alt={product.title}
+                    className="w-full h-52 object-cover"
+                  />
                 )}
-            </div>
-          ))}
-        </div>
 
-        {filtered.length === 0 && (
-          <p className="text-center text-gray-500 py-8">
-            {t.empty}
-          </p>
+                <div className="p-4">
+                  <h3 className="font-bold text-lg">{product.title}</h3>
+                  <p className="text-gray-600 my-2">{product.description}</p>
+                  <p className="font-bold text-green-700">
+                    {Number(product.price).toLocaleString()} RWF
+                  </p>
+                  <p className="text-sm mt-2">{product.category}</p>
+
+                  {product.status === 'pending' && (
+                    <p className="text-orange-600 font-semibold mt-2">
+                      {t.pending}
+                    </p>
+                  )}
+
+                  {product.status === 'rejected' && (
+                    <p className="text-red-600 font-semibold mt-2">
+                      {t.rejected}
+                    </p>
+                  )}
+
+                  {product.status === 'approved' && (
+                    <button
+                      onClick={() => setCart(old => old + 1)}
+                      className="bg-green-700 text-white rounded-lg px-4 py-2 mt-3"
+                    >
+                      <ShoppingCart size={17} className="inline mr-2" />
+                      {t.cart}
+                    </button>
+                  )}
+
+                  {product.seller_id === userId &&
+                    product.status === 'pending' && (
+                      <button
+                        onClick={() => deleteProduct(product.id)}
+                        className="bg-red-100 text-red-700 rounded-lg px-3 py-2 mt-3 ml-2"
+                      >
+                        <Trash2 size={17} className="inline mr-1" />
+                        {t.delete}
+                      </button>
+                    )}
+                </div>
+              </div>
+            ))}
+          </div>
         )}
-
-        <div className="fixed bottom-5 right-5 bg-emerald-700 text-white rounded-full p-4 shadow-lg">
-          <ShoppingCart className="inline mr-2" />
-          {cart.length}
-        </div>
-
-      </div>
+      </main>
     </div>
   );
-};
-
-export default Products;
+}
