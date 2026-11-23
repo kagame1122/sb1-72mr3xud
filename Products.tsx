@@ -375,6 +375,8 @@ export default function Products({ onBack }: ProductsProps) {
                       type="button"
                       onClick={() => {
   alert('Buto ya EMEZA irakora!');
+  onClick={() => {
+  alert('Buto ya EMEZA irakora!');
   changeStatus(product.id, 'approved');
 }}
                       className="bg-green-600 text-white px-4 py-2 rounded-lg flex gap-2"
