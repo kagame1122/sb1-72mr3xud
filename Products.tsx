@@ -371,14 +371,16 @@ export default function Products({ onBack }: ProductsProps) {
                   </p>
 
                   <div className="flex flex-wrap gap-3 mt-3">
-                    <button
-                      type="button"
-                      onClick={() => {
-  alert('Buto ya EMEZA irakora!');
+                   <button
+  type="button"
   onClick={() => {
-  alert('Buto ya EMEZA irakora!');
-  changeStatus(product.id, 'approved');
-}}
+    alert('Buto ya EMEZA irakora!');
+    changeStatus(product.id, 'approved');
+  }}
+  className="bg-green-600 text-white px-4 py-2 rounded-lg flex gap-2"
+>
+  <CheckCircle size={18} /> {t.approve}
+</button> 
                       className="bg-green-600 text-white px-4 py-2 rounded-lg flex gap-2"
                     >
                       <CheckCircle size={18} /> {t.approve}
