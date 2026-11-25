@@ -325,8 +325,15 @@ export default function Products({ onBack }: ProductsProps) {
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto p-4">
-     <div className="flex flex-wrap gap-3 mt-3">
+      <main className="max-w-6xl mx-auto p-4">  <button
+    type="button"
+    onClick={() => changeStatus(product.id, 'approved')}
+    className="bg-green-600 text-white px-4 py-2 rounded-lg flex gap-2"
+  >
+    <CheckCircle size={18} />
+    {t.approve}
+  </button>
+<div className="flex flex-wrap gap-3 mt-3">
   <button
     type="button"
     onClick={() => changeStatus(product.id, 'approved')}
@@ -336,6 +343,15 @@ export default function Products({ onBack }: ProductsProps) {
     {t.approve}
   </button>
 
+  <button
+    type="button"
+    onClick={() => changeStatus(product.id, 'rejected')}
+    className="bg-red-600 text-white px-4 py-2 rounded-lg flex gap-2"
+  >
+    <XCircle size={18} />
+    {t.reject}
+  </button>
+</div>
   <button
     type="button"
     onClick={() => changeStatus(product.id, 'rejected')}
